@@ -13,12 +13,12 @@ To compile and link c_budget_ordered_lists' source files, I am using GCC and Mak
 
 I plan to use various data structures to improve c_budget. I am rebuilding c_budget in the following order (please see my other repositories for various versions of c_budget):
 
-1. c_budget (original)
-2. c_budget_2d_array
-3. c_budget_array_of_structures
-4. c_budget_dynamic_strings
-5. c_budget_linked_lists
-6. c_budget_ordered_lists
+- c_budget (original)
+- c_budget_2d_array
+- c_budget_array_of_structures
+- c_budget_dynamic_strings
+- c_budget_linked_lists
+- c_budget_ordered_lists
 
 Also, you can compile c_budget_ordered_lists on Windows using the following command:
 
