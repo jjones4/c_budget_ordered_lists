@@ -7,11 +7,11 @@
  * Author:     jjones4
  *
  * Copyright (c) 2022 Jerad Jones
- * This file is part of c_budget_linked_lists.  c_budget_linked_lists
+ * This file is part of c_budget_ordered_lists.  c_budget_ordered_lists
  * may be freely distributed under the MIT license.  For all details and
  * documentation, see
  *
- * https://github.com/jjones4/c_budget_linked_lists
+ * https://github.com/jjones4/c_budget_ordered_lists
  *
  */
 
