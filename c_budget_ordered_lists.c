@@ -59,7 +59,7 @@ int main(void)
    char *type;
    char *description;
    
-   /* This will be our first node in the unordered list */
+   /* This will be our first node in the ordered list */
    /* This node begins the list of all transactions in our budget */
    struct transaction *budget = NULL;
    
