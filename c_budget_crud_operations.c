@@ -53,6 +53,8 @@ int create_transaction(int *number_of_transactions, struct transaction **ptr_bud
    struct transaction *new_node;
    struct transaction *p;
    
+   int i;
+   
    BOOL valid_amount = FALSE, valid_description = FALSE;
    
    /*
@@ -168,7 +170,17 @@ int create_transaction(int *number_of_transactions, struct transaction **ptr_bud
    new_node->amount = amount;
    new_node->type = type;
    new_node->description = description;
+   
+   /* Determine the position of the new node */
+   p = *ptr_budget;
+   i = 0;
+   while(p != NULL)
+   {
       
+      p = p->next;
+      i++;
+   }
+   
    new_node->next = *ptr_budget;
    *ptr_budget = new_node;
    
