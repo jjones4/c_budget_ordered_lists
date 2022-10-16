@@ -471,7 +471,7 @@ int update_transaction(int *number_of_transactions, struct transaction *budget)
 
 
 
-int delete_transaction(int *number_of_transactions, struct transaction *budget)
+int delete_transaction(int *number_of_transactions, struct transaction **ptr_budget)
 {
    FILE* temp_pointer;
    char id_string[MENU_INPUT_LENGTH + 1];
@@ -555,8 +555,8 @@ int delete_transaction(int *number_of_transactions, struct transaction *budget)
       }
       
       /* Remove the deleted transaction from list */
-      p = budget;
-      prev = budget;
+      p = *ptr_budget;
+      prev = *ptr_budget;
       i = 1;
       while(p != NULL)
       {
@@ -566,6 +566,17 @@ int delete_transaction(int *number_of_transactions, struct transaction *budget)
           * after that one */
          if(i == id)
          {
+            /* Deleting the first transaction is a special case */
+            if(id == 1)
+            {
+               *ptr_budget = (*ptr_budget)->next;
+               free(prev);
+               prev->next = p->next;
+               p = p->next;
+               i++;
+               continue;
+            }
+            
             free_mem = prev->next;
             prev->next = p->next;
             p = p->next;
