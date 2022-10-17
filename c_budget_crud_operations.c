@@ -51,9 +51,9 @@ int create_transaction(int *number_of_transactions, struct transaction **ptr_bud
    char *description;
    
    struct transaction *new_node;
+   struct transaction *cur;
+   struct transaction *prev;
    struct transaction *p;
-   
-   int i;
    
    BOOL valid_amount = FALSE, valid_description = FALSE;
    
@@ -155,7 +155,7 @@ int create_transaction(int *number_of_transactions, struct transaction **ptr_bud
       return EXIT_FAILURE;
    }
    
-   /* Put our new transaction into our unordered list */
+   /* Put our new transaction into our ordered list */
    date = malloc(strlen(date_string));
    amount = malloc(strlen(amount_string));
    type = malloc(strlen(type_string));
@@ -172,17 +172,24 @@ int create_transaction(int *number_of_transactions, struct transaction **ptr_bud
    new_node->description = description;
    
    /* Determine the position of the new node */
-   p = *ptr_budget;
-   i = 0;
-   while(p != NULL)
+   cur = *ptr_budget;
+   prev = NULL;
+   while(cur != NULL && strcmp(date, cur->date) > 0)
    {
-      
-      p = p->next;
-      i++;
+      prev = cur;
+      cur = cur->next;
    }
    
-   new_node->next = *ptr_budget;
-   *ptr_budget = new_node;
+   new_node->next = cur;
+   
+   if(prev == NULL)
+   {
+      *ptr_budget = new_node;
+   }
+   else
+   {
+      prev->next = new_node;
+   }
    
    temp_pointer = fopen(TEMP_FILE_NAME, "w");
    if(temp_pointer == NULL)
@@ -244,10 +251,10 @@ int read_transactions(int *number_of_transactions, struct transaction *budget)
 
 
 
-int update_transaction(int *number_of_transactions, struct transaction *budget)
+int update_transaction(int *number_of_transactions, struct transaction **ptr_budget)
 {
    FILE* temp_pointer;
-   char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1];
+   char complete_transaction_string[MAX_TRANSACTION_LENGTH + 1] = {0};
    char id_string[MENU_INPUT_LENGTH + 1];
    char menu_string[MENU_INPUT_LENGTH + 1];
    char date_string[DATE_LENGTH + 1];
@@ -255,8 +262,15 @@ int update_transaction(int *number_of_transactions, struct transaction *budget)
    char type_string[TYPE_LENGTH + 1];
    char description_string[DESCRIPTION_LENGTH + 1];
    
+   char *date;
+   char *amount;
+   char *type;
+   char *description;
+   
    struct transaction *p;
    struct transaction *prev;
+   struct transaction *cur;
+   struct transaction *new_node;
    
    BOOL valid_id = FALSE;
    BOOL valid_date= FALSE;
@@ -265,7 +279,7 @@ int update_transaction(int *number_of_transactions, struct transaction *budget)
    
    int i, id = 0;
    
-   (void) read_transactions(number_of_transactions, budget);
+   (void) read_transactions(number_of_transactions, *ptr_budget);
    
    do
    {
@@ -297,8 +311,8 @@ int update_transaction(int *number_of_transactions, struct transaction *budget)
     * of the ID that the user gave. We will store this lilne
     * in the complete_transaction_string
     */
-   p = budget;
-   prev = budget;
+   p = *ptr_budget;
+   prev = *ptr_budget;
    i = 1;
    while(p != NULL && i <= id)
    {
@@ -308,10 +322,21 @@ int update_transaction(int *number_of_transactions, struct transaction *budget)
          strcpy(amount_string, p->amount);
          strcpy(type_string, p->type);
          strcpy(description_string, p->description);
+         break;
       }
       prev = p;
       p = p->next;
       i++;
+   }
+   
+   if(i == 1)
+   {
+      *ptr_budget = (*ptr_budget)->next;
+   }
+   else
+   {
+      prev->next = p->next;
+      free(p);
    }
    
    /* Let the user choose which field they want to update */
@@ -425,14 +450,52 @@ int update_transaction(int *number_of_transactions, struct transaction *budget)
          printf("\nInvalid option entered. Please try again.\n");
    }
    
-   /*
-    * Rebuild the node with any new data given
-    * by the user
-    */
-   strcpy(prev->date, date_string);
-   strcpy(prev->amount, amount_string);
-   strcpy(prev->type, type_string);
-   strcpy(prev->description, description_string);
+   /* Allocate memory for our new transaction node */
+   new_node = malloc(sizeof(struct transaction));
+      
+   if(new_node == NULL)
+   {
+      printf("\nMemory allocation error.\n");
+      return EXIT_FAILURE;
+   }
+   
+   /* Put our new transaction into our unordered list */
+   date = malloc(strlen(date_string));
+   amount = malloc(strlen(amount_string));
+   type = malloc(strlen(type_string));
+   description = malloc(strlen(description_string));
+   
+   strcpy(date, date_string);
+   strcpy(amount, amount_string);
+   strcpy(type, type_string);
+   strcpy(description, description_string);
+   
+   new_node->date = date;
+   new_node->amount = amount;
+   new_node->type = type;
+   new_node->description = description;
+   
+   /* Determine the position of the updated node */
+   /* Just in case the user changed the date */
+   cur = *ptr_budget;
+   prev = NULL;
+   
+   while(cur != NULL && strcmp(new_node->date, cur->date) > 0)
+   {
+      prev = cur;
+      cur = cur->next;
+   }
+   
+   new_node->next = cur;
+   
+   if(prev == NULL)
+   {
+      *ptr_budget = new_node;
+   }
+   else
+   {
+      prev->next = new_node;
+   }
    
    /* Move the new data to a temp file
     * Remove the original file, and rename the temp file
@@ -446,7 +509,7 @@ int update_transaction(int *number_of_transactions, struct transaction *budget)
       exit(EXIT_FAILURE);
    }
    
-   p = budget;
+   p = *ptr_budget;
    while(p != NULL)
    {
       strcpy(complete_transaction_string, p->date);

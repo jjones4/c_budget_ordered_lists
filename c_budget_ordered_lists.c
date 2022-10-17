@@ -219,7 +219,7 @@ int main(void)
             else
             {
                number_of_transactions =
-                  update_transaction(&number_of_transactions, budget);
+                  update_transaction(&number_of_transactions, &budget);
             }
          }
          else if(menu_option_to_int == 4)
