@@ -332,6 +332,7 @@ int update_transaction(int *number_of_transactions, struct transaction **ptr_bud
    if(i == 1)
    {
       *ptr_budget = (*ptr_budget)->next;
+      free(p);
    }
    else
    {
