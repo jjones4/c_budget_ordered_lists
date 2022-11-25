@@ -1,6 +1,6 @@
 /*
  *
- * Name:       c_budget_crud_operations.h
+ * Name:       crud_operations.h
  *
  * Purpose:    Contains function prototypes for adding,
  *             displaying, updating, or removing a budget
@@ -23,7 +23,7 @@
 #ifndef CRUD_OPERATIONS_H
 #define CRUD_OPERATIONS_H
 #include <stdio.h>
-#include "c_budget_read_input.h"
+#include "read_input.h"
 
 struct transaction
 {

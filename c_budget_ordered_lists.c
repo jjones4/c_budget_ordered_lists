@@ -30,10 +30,10 @@
  * Preprocessing directives
  *
  */
-#include "c_budget_menus.h"
-#include "c_budget_validation.h"
-#include "c_budget_read_input.h"
-#include "c_budget_crud_operations.h"
+#include "menus.h"
+#include "validation.h"
+#include "read_input.h"
+#include "crud_operations.h"
 
 char *parse_transaction_string(char *transaction_field, char *complete_transaction_string);
 
@@ -84,7 +84,7 @@ int main(void)
       printf("Please ensure %s exists, and try again.\n\n", FILE_NAME);
       return EXIT_FAILURE;
    }
-   
+
    /*
     * Read the transactions from file. Stop filling the list after we
     * reach the max number of transactions. If we can read another transaction,
@@ -132,7 +132,7 @@ int main(void)
          printf("\nMemory allocation error.\n");
          return EXIT_FAILURE;
       }
-      
+   
       date = malloc(strlen(date_string));
       amount = malloc(strlen(amount_string));
       type = malloc(strlen(type_string));

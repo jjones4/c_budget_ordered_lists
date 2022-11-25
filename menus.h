@@ -1,6 +1,6 @@
 /*
  *
- * Name:       c_budget_menus.h
+ * Name:       menus.h
  *
  * Purpose:    Contains function prototypes for showing c_budget_ordered_lists'
  *             menus to the user.
